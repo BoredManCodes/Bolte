@@ -120,10 +120,9 @@ namespace Volte.Interactions
                 ? result
                 : int.MaxValue;
 
-        public bool GetAsBoolean() =>
-            BackingData.Value.HardCast<bool>();
+        public bool GetAsBoolean() => BackingData.Value.HardCast<bool>();
 
-        public SocketRole GetAsRole(SocketRole defaultValue = null) =>
+        public SocketRole GetAsRole(SocketRole defaultValue = null) => 
             BackingData.Value.Cast<SocketRole>() ?? defaultValue;
 
         public SocketUser GetAsUser(SocketUser defaultValue = null) =>

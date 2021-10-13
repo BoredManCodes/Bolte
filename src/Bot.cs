@@ -79,6 +79,7 @@ namespace Volte
             // initializing addons is extremely long-running (because each addon is evaluated sequentially), so don't await
             Executor.Execute(async () => await _provider.Get<AddonService>().InitAsync());
             _provider.Get<ReminderService>().Initialize();
+            _provider.Get<DelayedRoleService>().Initialize();
             await _provider.Get<InteractionService>().CommandUpdater.InitAsync();
 
             try

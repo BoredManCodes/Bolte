@@ -42,6 +42,7 @@ namespace Volte.Entities
                 Extras = new GuildExtras
                 {
                     ModActionCaseNumber = default,
+                    DelayedRole = null,
                     SelfRoleIds = new HashSet<ulong>(),
                     Tags = new HashSet<Tag>(),
                     Warns = new HashSet<Warn>()

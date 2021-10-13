@@ -43,12 +43,9 @@ namespace Gommon
             _ => throw new ArgumentOutOfRangeException(nameof(action), action, null)
         };
 
-        public static string AsJson<T>(this T value, bool indented = true, JsonSerializerOptions options = null)
-        {
-            options ??= Config.JsonOptions;
-            options.WriteIndented = indented;
-            return JsonSerializer.Serialize(value, options);
-        }
+        public static string AsJson<T>(this T value, JsonSerializerOptions options = null)
+            => JsonSerializer.Serialize(value, options ?? Config.JsonOptions);
+        
 
         public static T ParseJson<T>(this string json, JsonSerializerOptions options = null) 
             => JsonSerializer.Deserialize<T>(json, options ?? Config.JsonOptions);

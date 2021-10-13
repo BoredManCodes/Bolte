@@ -1,10 +1,15 @@
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Gommon;
+using Humanizer;
+using Volte.Entities;
 using Volte.Helpers;
 using Volte.Interactions;
+using Volte.Services;
 
 namespace Volte.Commands.Application
 {
@@ -46,6 +51,16 @@ namespace Volte.Commands.Application
                 x.Subcommand("set", "Set the current guild's tag embedding setting.", opts =>
                     opts.RequiredBoolean("enabled", "Whether or not to enable this setting.")
                 );
+            });
+            o.SubcommandGroup("delayed-role", "Get or set the current guild's delayed role setting.", x =>
+            {
+                x.Subcommand("get", "Get the current guild's delayed role setting.");
+                x.Subcommand("set", "Set the current guild's delayed role setting.", opts =>
+                {
+                    opts.RequiredRole("role-to-add", "The role to add after the specified delay when new members join.");
+                    opts.RequiredRole("role-to-remove", "The role to remove before granting someone their delayed role.");
+                    opts.RequiredString("time-after-join", "How long do you want people to be in your server before they receive this role?");
+                });
             });
             o.SubcommandGroup("mod-log-channel", "Get or set the current guild's modlog channel.", x =>
             {
@@ -207,6 +222,41 @@ namespace Volte.Commands.Application
                         ctx.ModifyGuildSettings(data => data.Configuration.EmbedTagsAndShowAuthor = newSetting);
                     }
 
+                    break;
+                case "delayed-role":
+                    if (subcommand?.Name is "get")
+                    {
+                        var delayedRole = ctx.GuildSettings.Extras.DelayedRole;
+                        if (delayedRole is null)
+                            reply.WithEmbedFrom("This guild currently has no delayed role set.");
+                        else reply.WithEmbed(x =>
+                        {
+                            x.WithTitle($"{delayedRole.DelayAfterJoining.Humanize(3)} after joining, new members will");
+                            x.WithDescription(
+                                $"have {MentionUtils.MentionRole(delayedRole.RoleIdToRemove)} removed, and replaced by ${MentionUtils.MentionRole(delayedRole.RoleIdToAdd)}.");
+                        });
+                    }
+                    else
+                    {
+                        var roleToAdd = subcommand!.GetOption("role-to-add").GetAsRole();
+                        var roleToRemove = subcommand!.GetOption("role-to-remove").GetAsRole();
+                        var timeSpanRes = await ctx.Services.Get<CommandsService>()
+                            .GetTypeParser<TimeSpan>().ParseAsync(subcommand!.GetOption("time-after-join").GetAsString());
+
+                        if (timeSpanRes.IsSuccessful)
+                        {
+                            ctx.ModifyGuildSettings(d =>
+                                d.Extras.DelayedRole = DelayedRole.CreateFrom(timeSpanRes.Value, roleToAdd.Id, roleToRemove.Id)
+                            );
+                            reply.WithEmbed(x =>
+                            {
+                                x.WithTitle($"{timeSpanRes.Value.Humanize(5)} after joining, new members will");
+                                x.WithDescription(
+                                    $"have {roleToRemove.Mention} removed, and replaced by {roleToAdd.Mention}.");
+                            });
+                        }
+                        else reply.WithEmbed(eb => eb.WithTitle(timeSpanRes.FailureReason));
+                    }
                     break;
                 case "mod-log-channel":
                     if (subcommand?.Name is "get")

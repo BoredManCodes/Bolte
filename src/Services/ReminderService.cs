@@ -13,12 +13,12 @@ namespace Volte.Services
 {
     public class ReminderService : IVolteService
     {
-        private static readonly Regex JumpUrl =
+        private static readonly Regex jumpUrlPattern =
             new Regex(
                 @"https?://(?:(?:ptb|canary)\.)?discord(app)?\.com/channels/(?<GuildId>.+)/(?<ChannelId>\d+)/(?<MessageId>\d+)/?",
                 RegexOptions.Compiled);
 
-        private static readonly TimeSpan PollRate = 30.Seconds();
+        private static readonly TimeSpan pollRate = 30.Seconds();
         private static Timer _checker;
         private readonly DatabaseService _db;
         private readonly DiscordShardedClient _client;
@@ -50,7 +50,7 @@ namespace Volte.Services
                 }),
                 null,
                 5.Seconds(),
-                PollRate
+                pollRate
             );
         }
 
@@ -78,7 +78,7 @@ namespace Volte.Services
             _db.TryDeleteReminder(reminder);
         }
 
-        private bool IsMessageUrl(Reminder reminder) => JumpUrl.IsMatch(reminder.ReminderText, out var match) &&
+        private bool IsMessageUrl(Reminder reminder) => jumpUrlPattern.IsMatch(reminder.ReminderText, out var match) &&
                                                         (match.Groups["GuildId"].Value is "@me" ||
                                                          ulong.TryParse(match.Groups["GuildId"].Value, out _));
     }

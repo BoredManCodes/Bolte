@@ -12,6 +12,7 @@ namespace Volte.Entities
         internal GuildExtras()
         {
             SelfRoleIds = new HashSet<ulong>();
+            DelayedRole = null;
             Tags = new HashSet<Tag>();
             Warns = new HashSet<Warn>();
         }
@@ -21,6 +22,9 @@ namespace Volte.Entities
         
         [JsonPropertyName("auto_parse_quote_urls")]
         public bool AutoParseQuoteUrls { get; set; }
+        
+        [JsonPropertyName("delayed_role")]
+        public DelayedRole DelayedRole { get; set; }
 
         [JsonPropertyName("self_roles")]
         public HashSet<ulong> SelfRoleIds { get; set; }

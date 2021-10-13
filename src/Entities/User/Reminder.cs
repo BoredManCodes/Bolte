@@ -1,9 +1,8 @@
 using System;
-using JsonParser = System.Text.Json.JsonSerializer; // same class in namespace LiteDB
 using System.Text.Json.Serialization;
+using Gommon;
 using Volte.Commands;
 using LiteDB;
-using Volte;
 using Volte.Interactions;
 
 namespace Volte.Entities
@@ -37,7 +36,6 @@ namespace Volte.Entities
         [JsonPropertyName("reminder_for")]
         public string ReminderText { get; set; }
 
-        public override string ToString()
-            => JsonParser.Serialize(this, Config.JsonOptions);
+        public override string ToString() => this.AsJson();
     }
 }
