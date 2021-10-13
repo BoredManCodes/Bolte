@@ -21,7 +21,6 @@ using Volte.Services;
 
 namespace Volte.Entities
 {
-
     public sealed class EvalEnvironment
     {
         public class InteractionBased
@@ -32,7 +31,7 @@ namespace Volte.Entities
             public InteractionService Interactions { get; set; }
             public DatabaseService Database { get; set; }
             public InteractionBased Environment => this;
-            
+
             public string Inheritance<T>() => Inheritance(typeof(T));
             public string Inheritance(object obj) => Inheritance(obj.GetType());
             public string Inheritance(Type type) => InheritanceInternal(type);
@@ -104,10 +103,10 @@ namespace Volte.Entities
         public string Inheritance<T>() => Inheritance(typeof(T));
         public string Inheritance(object obj) => Inheritance(obj.GetType());
         public string Inheritance(Type type) => InheritanceInternal(type);
-        
+
         internal static string InheritanceInternal(Type type)
         {
-            var baseTypes = new List<Type> {type};
+            var baseTypes = new List<Type> { type };
             var latestType = type.BaseType;
 
             while (latestType != null)
@@ -136,7 +135,7 @@ namespace Volte.Entities
 
             return sb.ToString();
         }
-        
+
         public string Inspect(object obj) => InspectInternal(obj);
 
         private static string InspectInternal(object obj)
@@ -175,7 +174,7 @@ namespace Volte.Entities
                 // same here wtf
                 if (props.Count != 0)
                     inspection.AppendLine().AppendLine("<< Fields >>");
-                
+
 
                 var columnWidth = fields.Max(ab => ab.Name.Length) + 5;
                 foreach (var prop in fields)
@@ -230,13 +229,13 @@ namespace Volte.Entities
                 };
             }, e => $"[[{e.GetType().Name} thrown, message: \"{e.Message}\"]]");
 
-        public static void Throw<TException>() where TException : Exception
-        {
-            var ctor = typeof(TException).GetConstructors()
-                           .FirstOrDefault(x => x.GetParameters().IsEmpty())
-                       ?? throw new InvalidOperationException(
-                           "Specified exception type didn't have a discoverable zero-parameter constructor.");
-            throw ctor.Invoke(Array.Empty<object>()).Cast<TException>();
-        }
+        public static void Throw<TException>() where TException : Exception 
+            => (typeof(TException).GetConstructors()
+                    .FirstOrDefault(x => x.GetParameters().IsEmpty())
+                ?? throw new InvalidOperationException(
+                    "Specified exception type didn't have a discoverable zero-parameter constructor.")
+            )
+            .Invoke(Collections.NewArray<object>())
+            .Cast<TException>();
     }
 }

@@ -2,15 +2,14 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using Colorful;
-using Discord;
+using LogSeverity =  Discord.LogSeverity;
 using Discord.WebSocket;
 using Gommon;
 using Sentry;
-using Volte;
 using Volte.Entities;
 using Volte.Services;
-using Color = System.Drawing.Color;
 using Console = Colorful.Console;
 
 namespace Volte.Helpers
@@ -22,7 +21,7 @@ namespace Volte.Helpers
         static Logger() => Directory.CreateDirectory("logs");
 
         private static readonly object sysoutLock = new object();
-        private const string LogFile = "logs/Volte.log";
+        private const string _logFilePath = "logs/Volte.log";
         private static bool _headerPrinted;
 
         public static Task HandleLogAsync(LogEventArgs args)
@@ -73,7 +72,7 @@ namespace Volte.Helpers
             Log(LogSeverity.Error, src, message, e);
 
         /// <summary>
-        ///     Prints an <see cref="LogSeverity.Error"/> message to the console from the specified <paramref name="src"/> source, with the given <paramref name="message"/> message, with the specified <paramref name="e"/> exception if provided.
+        ///     Prints an <see cref="LogSeverity.Error"/> message to the console from the specified <paramref name="src"/> source, with the given <paramref name="e"/> exception.
         /// </summary>
         /// <param name="src">Source to print the message from.</param>
         /// <param name="e">Exception to print.</param>
@@ -149,7 +148,7 @@ namespace Volte.Helpers
         }
 
         private static string NormalizeLogFilePath(DateTime date) =>
-            LogFile.Replace("Volte", $"{date.Month}-{date.Day}-{date.Year}");
+            _logFilePath.Replace("Volte", $"{date.Month}-{date.Day}-{date.Year}");
 
         private static void Append(string m, Color c)
         {

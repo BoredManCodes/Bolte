@@ -1,19 +1,17 @@
 using Discord;
 using Gommon;
-using Humanizer;
 using Qmmands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using static System.Reflection.CustomAttributeExtensions;
+using static System.Reflection.BindingFlags;
 using System.Text;
 using System.Threading.Tasks;
 using Volte.Commands;
 using Volte.Commands.Modules;
-using Volte;
 using Volte.Entities;
-using Module = Qmmands.Module;
 
 namespace Volte.Helpers
 {
@@ -60,7 +58,7 @@ namespace Volte.Helpers
                 .WithDescription(command.Description ?? "No description provided.");
             var checks = CommandUtilities.EnumerateAllChecks(command).ToList();
 
-            async Task AddSubcommandsFieldAsync()
+            async Task _addSubcommandsFieldAsync()
             {
                 embed.AddField("Subcommands", (await command.Module.Commands.WhereAccessibleAsync(ctx)
                         .Where(x => !x.Attributes.Any(a => a is DummyCommandAttribute)).ToListAsync())
@@ -71,7 +69,7 @@ namespace Volte.Helpers
 
             if (command.Attributes.Any(x => x is DummyCommandAttribute))
             {
-                await AddSubcommandsFieldAsync();
+                await _addSubcommandsFieldAsync();
                 return !checks.IsEmpty()
                     ? embed.AddField("Checks",
                         (await Task.WhenAll(checks.Select(check => FormatCheckAsync(check, ctx)))).Join("\n"))
@@ -101,25 +99,25 @@ namespace Volte.Helpers
                     $"{Format.Code("4d3h2m1s")}: {Format.Italics("4 days, 3 hours, 2 minutes and one second.")}");
 
             if (command.Attributes.Any(x => x is ShowSubcommandsInHelpOverrideAttribute))
-                await AddSubcommandsFieldAsync();
+                await _addSubcommandsFieldAsync();
 
             if (command.Attributes.AnyGet(x => x is ShowUnixArgumentsInHelpAttribute, out var unixAttr) &&
                 unixAttr is ShowUnixArgumentsInHelpAttribute attr)
             {
-                static string FormatUnixArgs(KeyValuePair<string[], string> kvp) =>
+                static string _formatUnixArgs(KeyValuePair<string[], string> kvp) =>
                     $"{Format.Bold(kvp.Key.Select(name => $"-{name}").Join(" or "))}: {kvp.Value}";
 
-                static string GetArgs(VolteUnixCommand unixCommand) => unixCommand switch
+                static string _getArgs(VolteUnixCommand unixCommand) => unixCommand switch
                 {
-                    VolteUnixCommand.Announce => AdminUtilityModule.AnnounceNamedArguments.Select(FormatUnixArgs)
+                    VolteUnixCommand.Announce => AdminUtilityModule.AnnounceNamedArguments.Select(_formatUnixArgs)
                         .Join("\n"),
-                    VolteUnixCommand.Zalgo => UtilityModule.ZalgoNamedArguments.Select(FormatUnixArgs).Join("\n"),
-                    VolteUnixCommand.UnixBan => ModerationModule.UnixBanNamedArguments.Select(FormatUnixArgs)
+                    VolteUnixCommand.Zalgo => UtilityModule.ZalgoNamedArguments.Select(_formatUnixArgs).Join("\n"),
+                    VolteUnixCommand.UnixBan => ModerationModule.UnixBanNamedArguments.Select(_formatUnixArgs)
                         .Join("\n"),
                     _ => throw new ArgumentOutOfRangeException(nameof(unixCommand))
                 };
 
-                embed.AddField("Unix Arguments", GetArgs(attr.VolteUnixCommand));
+                embed.AddField("Unix Arguments", _getArgs(attr.VolteUnixCommand));
             }
 
 
@@ -131,14 +129,14 @@ namespace Volte.Helpers
 
         public static string FormatUsage(VolteContext ctx, Command cmd)
         {
-            static string FormatUsageParameter(Parameter param)
+            static string _formatUsageParameter(Parameter param)
                 => new StringBuilder(param.IsOptional ? "[" : "{")
                     .Append(param.Name)
                     .Append(param.IsOptional ? "]" : "}")
                     .ToString();
 
             return new StringBuilder($"{ctx.GuildData.Configuration.CommandPrefix}{cmd.FullAliases.First().ToLower()} ")
-                .Append(cmd.Parameters.Select(FormatUsageParameter).Join(" "))
+                .Append(cmd.Parameters.Select(_formatUsageParameter).Join(" "))
                 .ToString().Trim();
         }
 
@@ -180,16 +178,17 @@ namespace Volte.Helpers
             foreach (var parser in parsers)
             {
                 var parserObj = parser.GetConstructor(Type.EmptyTypes)?.Invoke(Array.Empty<object>());
-                var method = typeof(CommandService).GetMethod("AddTypeParser")!.MakeGenericMethod(
-                    parser.BaseType!.GenericTypeArguments[0]);
+                var method = typeof(CommandService).GetMethod("AddTypeParser")!
+                    .MakeGenericMethod(parser.BaseType!.GenericTypeArguments[0]);
                 // ReSharper disable twice PossibleNullReferenceException
                 // cant happen
-                method.Invoke(service,
-                    new[] { parserObj, parser.GetCustomAttribute<InjectTypeParserAttribute>().OverridePrimitive });
+
+                method.Invoke(service, Collections.NewArray(parserObj,
+                        parser.GetCustomAttribute<InjectTypeParserAttribute>().OverridePrimitive));
                 yield return parser;
             }
         }
-
+        
         public static Command GetCommand(this CommandService service, string name)
             => service.FindCommands(name).FirstOrDefault()?.Command;
 
@@ -200,7 +199,7 @@ namespace Volte.Helpers
             //add the number of primitive TypeParsers (that come with Qmmands) obtained from the private field _primitiveTypeParsers's Count
             // ReSharper disable twice PossibleNullReferenceException
             return customParsers + cs.GetType()
-                .GetField("_primitiveTypeParsers", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetField("_primitiveTypeParsers", Instance | NonPublic)
                 .GetValue(cs)
                 .Cast<IDictionary>()
                 .Count;

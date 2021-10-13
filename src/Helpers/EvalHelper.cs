@@ -22,7 +22,7 @@ namespace Volte.Helpers
 {
     public static class EvalHelper
     {
-        private static readonly Regex Pattern = new Regex("[\t\n\r]*`{3}(?:cs)?[\n\r]+((?:.|\n|\t\r)+)`{3}",
+        private static readonly Regex pattern = new Regex("[\t\n\r]*`{3}(?:cs)?[\n\r]+((?:.|\n|\t\r)+)`{3}",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         public static readonly ReadOnlyList<string> Imports = new ReadOnlyList<string>(new[]
@@ -49,7 +49,7 @@ namespace Volte.Helpers
         {
             try
             {
-                if (Pattern.IsMatch(code, out var match))
+                if (pattern.IsMatch(code, out var match))
                     code = match.Groups[1].Value;
 
 

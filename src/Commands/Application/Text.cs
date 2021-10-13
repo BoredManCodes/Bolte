@@ -51,7 +51,7 @@ namespace Volte.Commands.Application
                                     .Select(UtilityModule.GetNato)
                                     .Join(" "))
                                 ))
-                            .WithButtons(Buttons.Primary("text:nato:raw", "Raw"));
+                            .WithButtons(Buttons.Primary("text:nato:raw", "Raw", emote: null));
                     }
                     catch (ArgumentOutOfRangeException e)
                     {

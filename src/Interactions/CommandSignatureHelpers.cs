@@ -65,6 +65,8 @@ namespace Volte.Interactions
 
         public Choices(params (string Label, object Value)[] choices)
             => choices.ForEach(c => Values.Add(c.Label, c.Value));
+
+        public static implicit operator Choices((string Label, object Value)[] choices) => new Choices(choices);
     }
 
     public class Options
@@ -90,20 +92,14 @@ namespace Volte.Interactions
             
             // ReSharper disable once UseDeconstructionOnParameter
             // it's legit just a new variable declaration. no
-            choices?.Values?.ForEach(c =>
+            choices?.Values.ForEach(c =>
             {
-                switch (c.Value)
-                {
-                    case int integer:
-                        opt.AddChoice(c.Key, integer);
-                        break;
-                    default:
-                        opt.AddChoice(c.Key, c.Value.ToString());
-                        break;
-                }
+                if (c.Value is int integer)
+                    opt.AddChoice(c.Key, integer);
+                else 
+                    opt.AddChoice(c.Key, c.Value.ToString());
             });
-
-
+            
             var options = new Options();
             optionsProducer?.Invoke(options);
             options.Builders.ForEach(x => opt.AddOption(x));

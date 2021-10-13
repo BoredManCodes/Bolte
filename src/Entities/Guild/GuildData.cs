@@ -7,8 +7,7 @@ namespace Volte.Entities
 {
     public sealed class GuildData
     {
-        public static GuildData CreateFrom(IGuild guild)
-            => new GuildData
+        public static GuildData CreateFrom(IGuild guild) => new GuildData
             {
                 Id = guild.Id,
                 OwnerId = guild.OwnerId,
@@ -43,6 +42,8 @@ namespace Volte.Entities
                 {
                     ModActionCaseNumber = default,
                     DelayedRole = null,
+                    SuggestionNotificationChannelId = default,
+                    Suggestions = new HashSet<Suggestion>(),
                     SelfRoleIds = new HashSet<ulong>(),
                     Tags = new HashSet<Tag>(),
                     Warns = new HashSet<Warn>()

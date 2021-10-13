@@ -11,7 +11,8 @@ namespace Volte.Entities
     {
         internal GuildExtras()
         {
-            SelfRoleIds = new HashSet<ulong>();
+            SelfRoleIds = new HashSet<ulong>(25);
+            Suggestions = new HashSet<Suggestion>(25);
             DelayedRole = null;
             Tags = new HashSet<Tag>();
             Warns = new HashSet<Warn>();
@@ -28,6 +29,12 @@ namespace Volte.Entities
 
         [JsonPropertyName("self_roles")]
         public HashSet<ulong> SelfRoleIds { get; set; }
+        
+        [JsonPropertyName("suggestion_channel")]
+        public ulong SuggestionNotificationChannelId { get; set; }
+        
+        [JsonPropertyName("suggestions")]
+        public HashSet<Suggestion> Suggestions { get; set; }
 
         [JsonPropertyName("tags")]
         public HashSet<Tag> Tags { get; set; }
@@ -37,6 +44,8 @@ namespace Volte.Entities
 
         public void AddTag(Action<Tag> initializer) => Tags.Add(new Tag().Apply(initializer));
         public void AddWarn(Action<Warn> initializer) => Warns.Add(new Warn().Apply(initializer));
+        public void AddSuggestion(Action<Suggestion> initializer) 
+            => Suggestions.Add(new Suggestion().Apply(initializer));
         
         public override string ToString() => this.AsJson();
     }

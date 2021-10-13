@@ -8,8 +8,7 @@ namespace Volte.Commands
     [InjectTypeParser(true)]
     public sealed class BooleanParser : VolteTypeParser<bool>
     {
-        private string[] _trueValues =
-        {
+        private readonly string[] _trueValues = Collections.NewArray(
             "true", "y",
             "yes", "ye",
             "yep", "yeah",
@@ -18,19 +17,16 @@ namespace Volte.Commands
             "ya", "da",
             "yas", "enable",
             "yip", "positive",
-            "1"
-        };
+            "1");
 
-        private readonly string[] _falseValues =
-        {
+        private readonly string[] _falseValues = Collections.NewArray(
             "false", "n",
             "no", "nah",
             "na", "nej",
             "nope", "nop",
             "neg", "negatory",
             "disable", "nay",
-            "negative", "0"
-        };
+            "negative", "0");
 
         public override ValueTask<TypeParserResult<bool>> ParseAsync(string value, VolteContext _)
         {

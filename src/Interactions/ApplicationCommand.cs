@@ -129,18 +129,18 @@ namespace Volte.Interactions
             BackingData.Value.Cast<SocketUser>() ?? defaultValue;
 
         public SocketGuildUser GetAsGuildUser(SocketGuildUser defaultValue = null) =>
-            GetAsUser().Cast<SocketGuildUser>() ?? defaultValue;
+            GetAsUser(defaultValue).Cast<SocketGuildUser>();
 
         public SocketGuildChannel GetAsGuildChannel(SocketGuildChannel defaultValue = null) =>
             BackingData.Value.Cast<SocketGuildChannel>() ?? defaultValue;
 
         public SocketTextChannel GetAsTextChannel(SocketTextChannel defaultValue = null) =>
-            GetAsGuildChannel().Cast<SocketTextChannel>() ?? defaultValue;
+            GetAsGuildChannel(defaultValue).Cast<SocketTextChannel>();
 
         public SocketVoiceChannel GetAsVoiceChannel(SocketVoiceChannel defaultValue = null) =>
-            GetAsGuildChannel().Cast<SocketVoiceChannel>() ?? defaultValue;
+            GetAsGuildChannel(defaultValue).Cast<SocketVoiceChannel>();
 
         public SocketCategoryChannel GetAsCategory(SocketCategoryChannel defaultValue = null) =>
-            GetAsGuildChannel().Cast<SocketCategoryChannel>() ?? defaultValue;
+            GetAsGuildChannel(defaultValue).Cast<SocketCategoryChannel>();
     }
 }

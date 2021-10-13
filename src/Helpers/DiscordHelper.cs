@@ -46,12 +46,9 @@ namespace Volte.Helpers
         public static string Question => "\u2753";
         public static string Star => "\u2B50";
 
-        public static Emoji[] GetPollEmojis()
-            => new []
-            {
-                One.ToEmoji(), Two.ToEmoji(), Three.ToEmoji(), Four.ToEmoji(), Five.ToEmoji(),
-                Six.ToEmoji(), Seven.ToEmoji(), Eight.ToEmoji(), Nine.ToEmoji()
-            };
+        public static Emoji[] GetPollEmojis() 
+            => Collections.NewArray(One.ToEmoji(), Two.ToEmoji(), Three.ToEmoji(), Four.ToEmoji(), 
+                Five.ToEmoji(), Six.ToEmoji(), Seven.ToEmoji(), Eight.ToEmoji(), Nine.ToEmoji());
 
         public static RequestOptions CreateRequestOptions(Action<RequestOptions> initializer) 
             => new RequestOptions().Apply(initializer);
@@ -154,6 +151,28 @@ namespace Volte.Helpers
             {
                 return false;
             }
+        }
+
+        public static Task ModifyRolesAsync(this IGuildUser user,
+            IEnumerable<IRole> add,
+            IEnumerable<IRole> remove,
+            RequestOptions options = null) 
+            => user.ModifyRolesAsync(add.Select(x => x.Id), remove.Select(x => x.Id), options);
+        
+        public static async Task ModifyRolesAsync(this IGuildUser user, 
+            IEnumerable<ulong> add,
+            IEnumerable<ulong> remove, 
+            RequestOptions options = null)
+        {
+            await user.ModifyAsync(x =>
+            {
+                x.RoleIds = user.RoleIds.ToList().Apply(l =>
+                {
+                    l.Remove(user.Guild.EveryoneRole.Id);
+                    l.RemoveAll(add.Contains);
+                    l.AddRange(remove);
+                });
+            });
         }
 
         public static string GetInviteUrl(this DiscordShardedClient client, bool withAdmin = true)

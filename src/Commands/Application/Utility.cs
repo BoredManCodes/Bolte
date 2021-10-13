@@ -64,7 +64,7 @@ namespace Volte.Commands.Application
         public override async Task HandleSlashCommandAsync(SlashCommandContext ctx)
         {
             var user = ctx.Options["user"]?.GetAsGuildUser() ?? ctx.GuildUser;
-            var buttons = new ushort[] { 128, 256, 512, 1024 }
+            var buttons = Collections.NewArray<ushort>(128, 256, 512, 1024)
                 .Select(x => ButtonBuilder.CreateLinkButton($"{x}x{x}", user.GetEffectiveAvatarUrl(size: x)))
                 .ToArray();
 

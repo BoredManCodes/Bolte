@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Discord;
 using Gommon;
+using Volte.Helpers;
 
 namespace Volte.Interactions
 {
@@ -16,6 +17,22 @@ namespace Volte.Interactions
             if (label is null && emote is null)
                 throw new ArgumentException("Cannot create a button without a label OR emote.");
         }
+
+        public static IMessageComponent Danger(MessageComponentId id, string label = null, string unicode = null,
+            bool disabled = false) => Danger(id, label, unicode.ToEmoji(), disabled).Build();
+        
+        public static IMessageComponent Success(MessageComponentId id, string label = null, string unicode = null,
+            bool disabled = false) => Success(id, label, unicode.ToEmoji(), disabled).Build();
+
+        public static IMessageComponent Primary(MessageComponentId id, string label = null, string unicode = null,
+            bool disabled = false) => Primary(id, label, unicode.ToEmoji(), disabled).Build();
+
+        public static IMessageComponent Secondary(MessageComponentId id, string label = null, string unicode = null,
+            bool disabled = false) => Secondary(id, label, unicode.ToEmoji(), disabled).Build();
+
+        public static IMessageComponent Link(string url, string label = null, string unicode = null,
+            bool disabled = false) => Link(url, label, unicode.ToEmoji(), disabled).Build();
+        
         
         public static ButtonBuilder Danger(MessageComponentId id, string label = null, IEmote emote = null, bool disabled = false)
         {
@@ -23,7 +40,7 @@ namespace Volte.Interactions
 
             return (label is null
                 ? CreateBuilder(id, ButtonStyle.Danger, emote)
-                : ButtonBuilder.CreateDangerButton(id, label, emote)).WithDisabled(disabled);
+                : ButtonBuilder.CreateDangerButton(label, id, emote)).WithDisabled(disabled);
         }
         
         public static ButtonBuilder Success(MessageComponentId id, string label = null, IEmote emote = null, bool disabled = false)
@@ -35,7 +52,7 @@ namespace Volte.Interactions
                     .WithStyle(ButtonStyle.Success)
                     .WithCustomId(id)
                     .WithEmote(emote)
-                : ButtonBuilder.CreateSuccessButton(id, label, emote)).WithDisabled(disabled);
+                : ButtonBuilder.CreateSuccessButton(label, id, emote)).WithDisabled(disabled);
         }
         
         public static ButtonBuilder Primary(MessageComponentId id, string label = null, IEmote emote = null, bool disabled = false)
@@ -47,7 +64,7 @@ namespace Volte.Interactions
                     .WithStyle(ButtonStyle.Primary)
                     .WithCustomId(id)
                     .WithEmote(emote)
-                : ButtonBuilder.CreatePrimaryButton(id, label, emote)).WithDisabled(disabled);
+                : ButtonBuilder.CreatePrimaryButton(label, id, emote)).WithDisabled(disabled);
         } 
         
         public static ButtonBuilder Secondary(MessageComponentId id, string label = null, IEmote emote = null, bool disabled = false)
@@ -59,7 +76,7 @@ namespace Volte.Interactions
                     .WithStyle(ButtonStyle.Secondary)
                     .WithCustomId(id)
                     .WithEmote(emote)
-                : ButtonBuilder.CreateSecondaryButton(id, label, emote)).WithDisabled(disabled);
+                : ButtonBuilder.CreateSecondaryButton(label, id, emote)).WithDisabled(disabled);
         }
 
         public static ButtonBuilder Link(string url, string label, IEmote emote = null, bool disabled = false) =>
@@ -96,10 +113,10 @@ namespace Volte.Interactions
             var split = raw.Split(Separator);
             if (!split.IsEmpty())
             {
-                _identifier = Lambda.TryOrNull(() => split.First());
-                _action = Lambda.TryOrNull(() => split[1]);
-                _value = Lambda.TryOrNull(() => split[2]);
-                _trailing = Lambda.TryOrNull(() => raw[(raw.LastIndexOf(Separator) + 1)..]);
+                _identifier = split.FirstOrDefault();
+                _action = split.ElementAtOrDefault(1);
+                _value = split.ElementAtOrDefault(2);
+                _trailing = raw[(raw.LastIndexOf(Separator) + 1)..];
             }
         }
         

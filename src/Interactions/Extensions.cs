@@ -21,6 +21,9 @@ namespace Volte.Interactions
             return menu;
         }
 
+        public static SelectMenuOptionBuilder WithValue(this SelectMenuOptionBuilder o, object value) 
+            => o.WithValue(value.ToString());
+
         public static ApplicationCommandProperties[] GetCommandBuilders(this IEnumerable<ApplicationCommand> set,
             IServiceProvider provider = null)
             => set.Select<ApplicationCommand, ApplicationCommandProperties>(x => x.CommandType switch

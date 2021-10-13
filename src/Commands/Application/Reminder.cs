@@ -77,7 +77,7 @@ namespace Volte.Commands.Application
                         => new SelectMenuOptionBuilder()
                             .WithLabel(
                                 $"{r.Id}: {(r.ReminderText.Length > 25 ? $"{r.ReminderText.Take(25).Select(x => x.ToString()).Join("")}..." : r.ReminderText)}")
-                            .WithValue(r.Id.ToString()))
+                            .WithValue(r.Id))
                     .ToList())
                 .WithPlaceholder("Choose a reminder...");
 

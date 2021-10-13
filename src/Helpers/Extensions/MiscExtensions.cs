@@ -43,13 +43,16 @@ namespace Gommon
             _ => throw new ArgumentOutOfRangeException(nameof(action), action, null)
         };
 
+        public static string Truncate(this string str, int maxLength)
+            => str.Length <= maxLength
+                ? str
+                : $"{str[..(maxLength - 3)]}...";
+        
         public static string AsJson<T>(this T value, JsonSerializerOptions options = null)
             => JsonSerializer.Serialize(value, options ?? Config.JsonOptions);
-        
 
-        public static T ParseJson<T>(this string json, JsonSerializerOptions options = null) 
+        public static T ParseJson<T>(this string json, JsonSerializerOptions options = null)
             => JsonSerializer.Deserialize<T>(json, options ?? Config.JsonOptions);
-        
 
         public static Task WarnAsync(this SocketGuildUser member, VolteContext ctx, string reason)
             => ModerationModule.WarnAsync(ctx.User, ctx.GuildData, member,

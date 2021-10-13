@@ -23,7 +23,7 @@ namespace Volte.Entities
 
         public bool IsCommand(SocketUserMessage message, ulong guildId) 
             => CommandUtilities.HasAnyPrefix(message.Content, 
-                new[] { Database.GetData(guildId).Configuration.CommandPrefix, $"<@{Client.CurrentUser.Id}> ", $"<@!{Client.CurrentUser.Id}> " }, 
+                Collections.NewArray(Database.GetData(guildId).Configuration.CommandPrefix, $"<@{Client.CurrentUser.Id}> ", $"<@!{Client.CurrentUser.Id}> "), 
                 StringComparison.OrdinalIgnoreCase, out _, out _);
 
     }

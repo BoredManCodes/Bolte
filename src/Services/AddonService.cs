@@ -9,7 +9,6 @@ using Gommon;
 using Humanizer;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
-using static Gommon.Lambda;
 using Volte.Entities;
 using Volte.Helpers;
 

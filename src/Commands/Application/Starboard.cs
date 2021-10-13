@@ -107,16 +107,14 @@ namespace Volte.Commands.Application
             await reply.RespondAsync();
         }
 
-        private IEnumerable<IMessageComponent> GetConfigCommandButtons(bool enabled)
-            => new[]
-            {
+        private IEnumerable<IMessageComponent> GetConfigCommandButtons(bool enabled) => Collections.NewArray(
                 ButtonBuilder.CreateSuccessButton("Enable", "starboard:config:on",
                     DiscordHelper.BallotBoxWithCheck.ToEmoji()).WithDisabled(enabled),
                 ButtonBuilder.CreateDangerButton("Disable", "starboard:config:off",
                     DiscordHelper.OctagonalSign.ToEmoji()).WithDisabled(!enabled),
                 ButtonBuilder.CreateSecondaryButton("Setup", "starboard:config:setup",
-                    DiscordHelper.SpaceInvader.ToEmoji())
-            }.Select(x => x.Build());
+                    DiscordHelper.SpaceInvader.ToEmoji()))
+            .Select(x => x.Build());
 
 
         public override async Task HandleComponentAsync(MessageComponentContext ctx)
