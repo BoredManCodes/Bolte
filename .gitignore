@@ -10,3 +10,4 @@ src/data/Volte.db
 *.log
 src/data/config.json
 global.json
+readme.md
