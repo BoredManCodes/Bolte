@@ -5,8 +5,9 @@
         </td>
         <td align="center" width="75%">
             
-# Volte
+# Volte - but shittier
 
+## Shamelessly stolen from Greem
 A free, robust, open-source Discord bot written in C# with [Discord.Net Labs](https://github.com/Discord-Net-Labs/Discord.Net-Labs).
 
 [![Discord](https://img.shields.io/discord/405806471578648588.svg?color=7000FB&label=discord&style=for-the-badge)](https://discord.gg/H8bcFr2)
