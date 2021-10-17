@@ -20,7 +20,6 @@ namespace Volte.Services
         private readonly DiscordShardedClient _client;
 
         private readonly ILiteCollection<GuildData> _guildData;
-        private readonly Dictionary<ulong, ILiteCollection<GuildData>> _guildSuggestionData;
         private readonly ILiteCollection<Reminder> _reminderData;
         private readonly ILiteCollection<StarboardDbEntry> _starboardData;
 

@@ -33,10 +33,27 @@ namespace Volte.Helpers
         {
             if (_headerPrinted) return;
             Info(LogSource.Volte, CommandsService.Separator.Trim());
-            new Figlet().ToAscii("Volte").ConcreteValue.Split("\n", StringSplitOptions.RemoveEmptyEntries)
-                .ForEach(ln => Info(LogSource.Volte, ln));
+            Info(LogSource.Volte, $"BBBBBBBBBBBBBBBBB                    lllllll         tttt                                   TM");
+            Info(LogSource.Volte, $"B::::::::::::::::B                   l:::::l      ttt:::t                                     ");
+            Info(LogSource.Volte, $"B::::::BBBBBB:::::B                  l:::::l      t:::::t                                     ");
+            Info(LogSource.Volte, $"BB:::::B     B:::::B                 l:::::l      t:::::t                                     ");
+            Info(LogSource.Volte, $"  B::::B     B:::::B   ooooooooooo    l::::lttttttt:::::ttttttt        eeeeeeeeeeee           ");
+            Info(LogSource.Volte, $"  B::::B     B:::::B oo:::::::::::oo  l::::lt:::::::::::::::::t      ee::::::::::::ee         ");
+            Info(LogSource.Volte, $"  B::::BBBBBB:::::B o:::::::::::::::o l::::lt:::::::::::::::::t     e::::::eeeee:::::ee       ");
+            Info(LogSource.Volte, $"  B:::::::::::::BB  o:::::ooooo:::::o l::::ltttttt:::::::tttttt    e::::::e     e:::::e       ");
+            Info(LogSource.Volte, $"  B::::BBBBBB:::::B o::::o     o::::o l::::l      t:::::t          e:::::::eeeee::::::e       ");
+            Info(LogSource.Volte, $"  B::::B     B:::::Bo::::o     o::::o l::::l      t:::::t          e:::::::::::::::::e        ");
+            Info(LogSource.Volte, $"  B::::B     B:::::Bo::::o     o::::o l::::l      t:::::t          e::::::eeeeeeeeeee         ");
+            Info(LogSource.Volte, $"  B::::B     B:::::Bo::::o     o::::o l::::l      t:::::t    tttttte:::::::e                  ");
+            Info(LogSource.Volte, $"BB:::::BBBBBB::::::Bo:::::ooooo:::::ol::::::l     t::::::tttt:::::te::::::::e                 ");
+            Info(LogSource.Volte, $"B:::::::::::::::::B o:::::::::::::::ol::::::l     tt::::::::::::::t e::::::::eeeeeeee         ");
+            Info(LogSource.Volte, $"B::::::::::::::::B   oo:::::::::::oo l::::::l       tt:::::::::::tt  ee:::::::::::::e         ");
+            Info(LogSource.Volte, $"BBBBBBBBBBBBBBBBB      ooooooooooo   llllllll         ttttttttttt      eeeeeeeeeeeeee         ");
             Info(LogSource.Volte, CommandsService.Separator.Trim());
-            Info(LogSource.Volte, $"Currently running Volte V{Version.FullVersion}.");
+            Info(LogSource.Volte, $"");
+            Info(LogSource.Volte, $"Shamelessly stolen from Greem");
+            Info(LogSource.Volte, $"Currently hijacking Volte V{Version.FullVersion}.");
+            _headerPrinted = true;
             _headerPrinted = true;
         }
 

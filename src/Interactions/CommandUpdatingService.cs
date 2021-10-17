@@ -83,9 +83,8 @@ namespace Volte.Interactions
         public async Task<IEnumerable<IApplicationCommand>> UpsertMissingCommandsAsync(ulong guildId)
         {
             var data = await _db.GetDataAsync(guildId);
-            if (data.HasGuildOnlyCommands)
+            if (data.HasGuildOnlyCommands || _client.GetGuild(guildId) is null)
                 return Array.Empty<IApplicationCommand>();
-
             var cmds = await OverwriteGuildCommandsAsync(guildId);
             data.HasGuildOnlyCommands = true;
             _db.Save(data);

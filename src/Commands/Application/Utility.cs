@@ -124,7 +124,7 @@ namespace Volte.Commands.Application
                 await ctx.DeferAsync(true);
                 Executor.Execute(async () =>
                 {
-                    await ctx.CreateReplyBuilder(true)
+                    await ctx.CreateReplyBuilder()
                         .WithEmbeds(ctx.CreateEmbedBuilder().Apply(pollInfo.Apply))
                         .FollowupAsync().Then(async m =>
                         {
