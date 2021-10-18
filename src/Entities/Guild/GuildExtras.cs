@@ -35,6 +35,12 @@ namespace Volte.Entities
         
         [JsonPropertyName("suggestions")]
         public HashSet<Suggestion> Suggestions { get; set; }
+        
+        [JsonPropertyName("todo_channel")]
+        public ulong TodoNotificationChannelId { get; set; }
+        
+        [JsonPropertyName("todos")]
+        public HashSet<Todo> Todos { get; set; }
 
         [JsonPropertyName("tags")]
         public HashSet<Tag> Tags { get; set; }
