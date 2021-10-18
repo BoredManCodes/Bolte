@@ -17,7 +17,7 @@ namespace Volte.Commands.Application
             : base("todo", "Create to-dos, and if you're an admin, view and delete them, too.", true)
             => Signature(x =>
             {
-                x.Subcommand("view", "View and complete/remove, and/or delete to-dos.");
+                x.Subcommand("view", "View and accept/deny, and/or delete to-dos.");
                 x.Subcommand("create",
                     "Create a to-do in this server for the staff to view and complete or remove.", o =>
                     {
@@ -47,9 +47,9 @@ namespace Volte.Commands.Application
 
         private readonly Func<Todo, MessageComponent> _getTodoButtons = s
             => new ComponentBuilder().AddActionRow(r =>
-                    r.AddComponent(Buttons.Success($"todo:complete:{s.Uuid}", "Complete",
+                    r.AddComponent(Buttons.Success($"todo:approve:{s.Uuid}", "Complete",
                             DiscordHelper.BallotBoxWithCheck))
-                        .AddComponent(Buttons.Danger($"todo:remove:{s.Uuid}", "Remove", DiscordHelper.X)))
+                        .AddComponent(Buttons.Danger($"todo:deny:{s.Uuid}", "Remove", DiscordHelper.X)))
                 .AddActionRow(r =>
                     r.AddComponent(Buttons.Secondary($"todo:pass:{s.Uuid}", "Choose another",
                         DiscordHelper.Question)))
@@ -130,7 +130,7 @@ namespace Volte.Commands.Application
         {
             switch (ctx.Id.Action)
             {
-                case "complete":
+                case "approve":
                     var target = ctx.GuildSettings.Extras.Todos.First(x => 
                         x.Uuid == Guid.Parse(ctx.Id.Value));
                     
@@ -170,7 +170,7 @@ namespace Volte.Commands.Application
                     }
                     break;
                 
-                case "remove":
+                case "deny":
                     var targetTodo = ctx.GuildSettings.Extras.Todos.First(x => 
                         x.Uuid == Guid.Parse(ctx.Id.Value));
                     
@@ -225,14 +225,14 @@ namespace Volte.Commands.Application
                 await e.SendToAsync(c);
         }
 
-        private async Task SendFinalStatusAsync(MessageComponentContext ctx, Todo todo, bool completed)
+        private async Task SendFinalStatusAsync(MessageComponentContext ctx, Todo todo, bool approved)
         {
             var e = ctx.CreateEmbedBuilder()
-                .WithAuthor(completed ? "To-Do completed!" : "To-do Removed!")
-                .WithFooter($"{(completed ? "Completed" : "Removed")} by {ctx.User}.", ctx.User.GetEffectiveAvatarUrl())
+                .WithAuthor(approved ? "To-Do completed!" : "To-do Removed!")
+                .WithFooter($"{(approved ? "Completed" : "Removed")} by {ctx.User}.", ctx.User.GetEffectiveAvatarUrl())
                 .WithTitle(todo.ShortSummary.Truncate(EmbedBuilder.MaxTitleLength))
                 .WithDescription(todo.LongDescription.Truncate(EmbedFieldBuilder.MaxFieldValueLength))
-                .WithColor(completed ? Color.Green : Color.Red);
+                .WithColor(approved ? Color.Green : Color.Red);
 
             var u = ctx.Guild.GetUser(todo.CreatorId);
             if (u != null)
