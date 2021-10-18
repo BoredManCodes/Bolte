@@ -39,10 +39,10 @@ namespace Volte.Commands.Application
             => new SelectMenuBuilder()
                 .WithPlaceholder("Choose a to-do...")
                 .WithCustomId("todo:adminMenu")
-                .WithOptions(s.Take(25).Select(todo => new SelectMenuOptionBuilder()
-                        .WithLabel($"{todo.ShortSummary.Truncate(100)}")
-                        .WithDescription(todo.LongDescription.Truncate(100))
-                        .WithValue(todo.Uuid))
+                .WithOptions(s.Take(25).Select(sugg => new SelectMenuOptionBuilder()
+                        .WithLabel($"{sugg.ShortSummary.Truncate(100)}")
+                        .WithDescription(sugg.LongDescription.Truncate(100))
+                        .WithValue(sugg.Uuid))
                     .ToList());
 
         private readonly Func<Todo, MessageComponent> _getTodoButtons = s
