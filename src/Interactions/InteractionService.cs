@@ -20,12 +20,11 @@ namespace Volte.Services
         {
             CommandUpdater = new CommandUpdatingService(this, provider);
 
-            Assembly.GetExecutingAssembly().GetExportedTypes()
-                .Where(x => x.Inherits<ApplicationCommand>() && !x.IsAbstract && !x.ContainsGenericParameters)
-                .ForEach(type =>
-                    Lambda.Try(() =>
-                        RegisterCommands(Activator.CreateInstance(type).Cast<ApplicationCommand>())
-                    ));
+            Lambda.Try(() =>
+                RegisterCommands(Assembly.GetExecutingAssembly().GetExportedTypes()
+                    .Where(x => x.Inherits<ApplicationCommand>() && !x.IsAbstract && !x.ContainsGenericParameters)
+                    .Select(x => Activator.CreateInstance(x).Cast<ApplicationCommand>()).ToArray())
+            );
 
             client.InteractionCreated += async interaction =>
             {

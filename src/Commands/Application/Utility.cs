@@ -115,26 +115,23 @@ namespace Volte.Commands.Application
             var question = ctx.Options["question"].GetAsString();
             var options = ctx.Options["options"].GetAsString();
             var mention = ctx.Options["mention"];
-            var mentionStr = mention != null
-                ? mention.GetAsRole()?.Mention ?? mention.GetAsUser()?.Mention
-                : string.Empty;
+            var mentionStr = mention?.GetAsRole()?.Mention ?? mention?.GetAsUser()?.Mention;
 
             if (PollInfo.TryParse($"{question};{options}", out var pollInfo))
             {
-                await ctx.DeferAsync(true);
                 Executor.Execute(async () =>
-                {
-                    await ctx.CreateReplyBuilder()
-                        .WithEmbeds(ctx.CreateEmbedBuilder().Apply(pollInfo.Apply))
-                        .FollowupAsync().Then(async m =>
-                        {
-                            if (mentionStr != null)
-                                await ctx.Channel.SendMessageAsync(mentionStr);
+                    await ctx.DeferAsync()
+                        .Then(() => ctx.CreateReplyBuilder()
+                            .WithEmbed(pollInfo.Apply)
+                            .FollowupAsync().Then(async m =>
+                            {
+                                if (mentionStr != null)
+                                    await ctx.Channel.SendMessageAsync(mentionStr);
 
-                            await DiscordHelper.GetPollEmojis()[..pollInfo.Fields.Count]
-                                .ForEachAsync(async emoji => await m.AddReactionAsync(emoji));
-                        });
-                });
+                                await DiscordHelper.GetPollEmojis()[..pollInfo.Fields.Count]
+                                    .ForEachAsync(async emoji => await m.AddReactionAsync(emoji));
+                            }))
+                );
             }
             else
             {
