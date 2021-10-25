@@ -16,7 +16,7 @@ namespace Volte.Commands.Modules
             => Ok($"Feedback sent! Message: {Format.Code(feedback, string.Empty)}", _ =>
                 Context.CreateEmbedBuilder($"{Format.Code(feedback, string.Empty)}")
                     .WithTitle($"Feedback from {Context.User}")
-                    .SendToAsync(Context.Client.GetPrimaryGuild().GetTextChannel(415182876326232064))
+                    .SendToAsync(Context.Client.GetPrimaryGuild().GetTextChannel(891613945356492893))
             );
     }
 }
