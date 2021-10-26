@@ -28,7 +28,7 @@ namespace Volte.Commands.Application
 
         public override async Task HandleSlashCommandAsync(SlashCommandContext ctx)
         {
-            var reply = ctx.CreateReplyBuilder(true);
+            var reply = ctx.CreateReplyBuilder(false);
             var subcommand = ctx.Options.First().Value;
             var timeFromNow = subcommand.GetOption("time-from-now")?.GetAsString();
             var reminderContent = subcommand.GetOption("content")?.GetAsString();
