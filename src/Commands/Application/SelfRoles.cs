@@ -13,7 +13,7 @@ namespace Volte.Commands.Application
 {
     public sealed class IamCommand : ApplicationCommand
     {
-        public IamCommand() : base("iam", "Give yourself Self Roles via dropdown menu.", true) { }
+        public IamCommand() : base("iam", "Give yourself roles via dropdown menu.", true) { }
 
         public override async Task HandleSlashCommandAsync(SlashCommandContext ctx)
         {
@@ -60,7 +60,7 @@ namespace Volte.Commands.Application
 
     public sealed class IamNotCommand : ApplicationCommand
     {
-        public IamNotCommand() : base("iamnot", "Take away Self Roles from yourself via dropdown menu.", true) { }
+        public IamNotCommand() : base("iamnot", "Take away roles from yourself via dropdown menu.", true) { }
 
         public override async Task HandleSlashCommandAsync(SlashCommandContext ctx)
         {
@@ -74,7 +74,7 @@ namespace Volte.Commands.Application
 
 
             if (roles.IsEmpty())
-                reply.WithEmbedFrom("You don't have any self roles.");
+                reply.WithEmbedFrom("You don't have any self-assigned roles.");
             else
                 reply.WithEmbedFrom("What roles would you like taken away?")
                     .WithSelectMenu(new SelectMenuBuilder()
@@ -101,13 +101,13 @@ namespace Volte.Commands.Application
 
     public class SelfRoleCommand : ApplicationCommand
     {
-        public SelfRoleCommand() : base("self-roles", "Modify the current guild's list of self roles.", true) =>
+        public SelfRoleCommand() : base("self-roles", "Modify the current guild's list of self-assigned roles.", true) =>
             Signature(o =>
             {
-                o.Subcommand("add", "Add a role to the list of self roles for this guild.", x =>
-                    x.RequiredRole("role", "The role to add to the list of self roles.")
+                o.Subcommand("add", "Add a role to the list of self-assigned roles for this guild.", x =>
+                    x.RequiredRole("role", "The role to add to the list of self-assigned roles.")
                 );
-                o.Subcommand("remove", "Remove roles from the list of self roles via dropdown menu.");
+                o.Subcommand("remove", "Remove roles from the list of self-assigned roles via dropdown menu.");
             });
 
         private readonly Func<IEnumerable<SocketRole>, SelectMenuBuilder> _getSelfRoleRemoveMenu = rs =>
@@ -144,22 +144,22 @@ namespace Volte.Commands.Application
             {
                 case "add":
                     if (ctx.GuildSettings.Extras.SelfRoleIds.Count is 25)
-                        reply.WithEmbed(x => x.WithTitle("You can't have more than 25 self roles."));
+                        reply.WithEmbed(x => x.WithTitle("You can't have more than 25 self-assigned roles, this is a Discord limitation."));
                     else
                     {
                         var role = subcommand.GetOption("role").GetAsRole();
                         if (ctx.GuildSettings.Extras.SelfRoleIds.Contains(role.Id))
-                            reply.WithEmbed(x => x.WithTitle("That role is already in the self role list."));
+                            reply.WithEmbed(x => x.WithTitle("That role is already in the self-assigned role list."));
                         else
                         {
-                            reply.WithEmbed(x => x.WithTitle("Added that role to the self role list."));
+                            reply.WithEmbed(x => x.WithTitle("Added that role to the self-assigned role list."));
                             ctx.ModifyGuildSettings(data => data.Extras.SelfRoleIds.Add(role.Id));
                         }
                     }
 
                     break;
                 case "remove":
-                    reply.WithEmbedFrom("What roles would you like to remove from the self role list?")
+                    reply.WithEmbedFrom("What roles would you like to remove from the self-assigned role list?")
                         .WithSelectMenu(
                             _getSelfRoleRemoveMenu(
                                 ctx.GuildSettings.Extras.SelfRoleIds.Select(x => ctx.Guild.GetRole(x))));

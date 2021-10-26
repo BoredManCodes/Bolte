@@ -36,7 +36,7 @@ namespace Volte.Commands.Application
             {
                 var reminders = ctx.Db.GetReminders(ctx.User);
                 if (reminders.Count is 25)
-                    reply.WithEmbed(eb => eb.WithTitle("You may not have more than 25 reminders."));
+                    reply.WithEmbed(eb => eb.WithTitle("You may not have more than 25 reminders, this is a Discord limitation."));
                 else
                 {
                     var timeSpanRes = await ctx.Services.Get<CommandsService>()
