@@ -47,7 +47,7 @@ namespace Volte.Commands.Application
                         ctx.Db.CreateReminder(Reminder.CreateFrom(ctx, end, reminderContent));
                         reply.WithEmbeds(ctx
                             .CreateEmbedBuilder($"I'll remind you about {Format.Code(reminderContent)}.")
-                            .WithTitle($"{end.GetDiscordTimestamp(TimestampType.Relative)},"));
+                            .WithTitle($"At {end.GetDiscordTimestamp((TimestampType.ShortDateTime))}({end.GetDiscordTimestamp(TimestampType.Relative)}),"));
                     }
                     else
                         reply.WithEmbed(eb => eb.WithTitle(timeSpanRes.FailureReason));
