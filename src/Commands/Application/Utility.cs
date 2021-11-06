@@ -72,7 +72,7 @@ namespace Volte.Commands.Application
                 .WithEmbeds(ctx.CreateEmbedBuilder()
                     .WithAuthor(user)
                     .WithImageUrl(user.GetEffectiveAvatarUrl()))
-                .WithEphemeral()
+                .WithEphemeral(false)
                 .WithButtons(buttons.Take(2))
                 .WithButtons(buttons.Skip(2))
                 .RespondAsync();
