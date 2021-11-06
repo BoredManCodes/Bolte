@@ -28,7 +28,7 @@ namespace Volte.Commands.Application
 
         public override async Task HandleSlashCommandAsync(SlashCommandContext ctx)
         {
-            var reply = ctx.CreateReplyBuilder(true);
+            var reply = ctx.CreateReplyBuilder(false);
             var subcommand = ctx.Options.First().Value;
             var timeFromNow = subcommand.GetOption("time-from-now")?.GetAsString();
             var reminderContent = subcommand.GetOption("content")?.GetAsString();
@@ -36,7 +36,7 @@ namespace Volte.Commands.Application
             {
                 var reminders = ctx.Db.GetReminders(ctx.User);
                 if (reminders.Count is 25)
-                    reply.WithEmbed(eb => eb.WithTitle("You may not have more than 25 reminders."));
+                    reply.WithEmbed(eb => eb.WithTitle("You may not have more than 25 reminders, this is a Discord limitation."));
                 else
                 {
                     var timeSpanRes = await ctx.Services.Get<CommandsService>()
@@ -47,7 +47,7 @@ namespace Volte.Commands.Application
                         ctx.Db.CreateReminder(Reminder.CreateFrom(ctx, end, reminderContent));
                         reply.WithEmbeds(ctx
                             .CreateEmbedBuilder($"I'll remind you about {Format.Code(reminderContent)}.")
-                            .WithTitle($"{end.GetDiscordTimestamp(TimestampType.Relative)},"));
+                            .WithTitle($"At {end.GetDiscordTimestamp((TimestampType.ShortDateTime))}({end.GetDiscordTimestamp(TimestampType.Relative)}),"));
                     }
                     else
                         reply.WithEmbed(eb => eb.WithTitle(timeSpanRes.FailureReason));
