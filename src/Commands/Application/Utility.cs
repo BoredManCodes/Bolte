@@ -40,7 +40,7 @@ namespace Volte.Commands.Application
 
             await ctx.CreateReplyBuilder()
                 .WithEmbedFrom(result)
-                .WithEphemeral()
+                .WithEphemeral(false)
                 .RespondAsync();
         }
     }
@@ -95,7 +95,7 @@ namespace Volte.Commands.Application
                         .WithEmbedFrom(new StringBuilder()
                             .AppendLine($"{DiscordHelper.Clap} **Gateway**: {ctx.Client.Latency} milliseconds")
                             .AppendLine($"{DiscordHelper.OkHand} **REST**: {sw.Elapsed.Humanize(3)}"))
-                        .WithEphemeral()
+                        .WithEphemeral(false)
                         .FollowupAsync();
                 });
         }
@@ -116,7 +116,6 @@ namespace Volte.Commands.Application
             var options = ctx.Options["options"].GetAsString();
             var mention = ctx.Options["mention"];
             var mentionStr = mention?.GetAsRole()?.Mention ?? mention?.GetAsUser()?.Mention;
-
             if (PollInfo.TryParse($"{question};{options}", out var pollInfo))
             {
                 Executor.Execute(async () =>
@@ -269,7 +268,7 @@ namespace Volte.Commands.Application
         public override async Task HandleSlashCommandAsync(SlashCommandContext ctx)
         {
             var subcommand = ctx.Options.First().Value;
-            var reply = ctx.CreateReplyBuilder().WithEphemeral();
+            var reply = ctx.CreateReplyBuilder().WithEphemeral(false);
             if (subcommand.Name is "invite")
             {
                 reply.WithButtons(
