@@ -247,9 +247,9 @@ namespace Volte.Commands.Application
                         .AddField("Is Bot", ctx.TargetedGuildUser.IsBot ? "Yes" : "No", true)
                         .AddField("Role Hierarchy", ctx.TargetedGuildUser.Hierarchy, true)
                         .AddField("Account Created at:",
-                            $"{ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.LongDateTime)} ({ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})")
+                            $"{ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)}")
                         .AddField("Joined This Guild",
-                            $"{(ctx.TargetedGuildUser.JoinedAt.HasValue ? ctx.TargetedGuildUser.JoinedAt.Value.GetDiscordTimestamp(TimestampType.LongDateTime) : DiscordHelper.Zws)} ({ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})")
+                            $"{(ctx.TargetedGuildUser.JoinedAt.HasValue ? ctx.TargetedGuildUser.JoinedAt.Value.GetDiscordTimestamp(TimestampType.Relative) : DiscordHelper.Zws)}")
                         .WithThumbnailUrl(ctx.TargetedGuildUser.GetEffectiveAvatarUrl(size: 512)))
                     .RespondAsync();
             }
@@ -283,7 +283,7 @@ namespace Volte.Commands.Application
                 case "guild":
                     reply.WithEmbeds(ctx.CreateEmbedBuilder()
                         .WithTitle(ctx.Guild.Name)
-                        .AddField("Created", $"{ctx.Guild.CreatedAt.GetDiscordTimestamp(TimestampType.LongDateTime)}")
+                        .AddField("Created", $"{ctx.Guild.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)}")
                         .AddField("Owner", ctx.Guild.Owner)
                         .AddField("Region", ctx.Guild.VoiceRegionId)
                         .AddField("Members", ctx.Guild.Users.Count, true)
@@ -332,12 +332,12 @@ namespace Volte.Commands.Application
                         .AddField("Role Hierarchy", target.Hierarchy, true)
                         .AddField(
                             "Account Created",
-                            $"{target.CreatedAt.GetDiscordTimestamp(TimestampType.LongDateTime)}"
+                            $"{target.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})"
                         ).Apply(eb =>
                         {
                             if (target.JoinedAt.HasValue)
                                 eb.AddField("Joined This Guild",
-                                    target.JoinedAt.Value.GetDiscordTimestamp(TimestampType.LongDateTime));
+                                    target.JoinedAt.Value.GetDiscordTimestamp(TimestampType.Relative));
                         })
                         .WithThumbnailUrl(target.GetEffectiveAvatarUrl(size: 512)));
                     break;
