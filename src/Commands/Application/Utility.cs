@@ -247,9 +247,9 @@ namespace Volte.Commands.Application
                         .AddField("Is Bot", ctx.TargetedGuildUser.IsBot ? "Yes" : "No", true)
                         .AddField("Role Hierarchy", ctx.TargetedGuildUser.Hierarchy, true)
                         .AddField("Account Created",
-                            $"{ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.LongDateTime)}")
+                            $"{ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.LongDateTime)} ({ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})")
                         .AddField("Joined This Guild",
-                            $"{(ctx.TargetedGuildUser.JoinedAt.HasValue ? ctx.TargetedGuildUser.JoinedAt.Value.GetDiscordTimestamp(TimestampType.LongDateTime) : DiscordHelper.Zws)}")
+                            $"{(ctx.TargetedGuildUser.JoinedAt.HasValue ? ctx.TargetedGuildUser.JoinedAt.Value.GetDiscordTimestamp(TimestampType.LongDateTime) : DiscordHelper.Zws)} ({ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})")
                         .WithThumbnailUrl(ctx.TargetedGuildUser.GetEffectiveAvatarUrl(size: 512)))
                     .RespondAsync();
             }
