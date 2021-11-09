@@ -332,7 +332,7 @@ namespace Volte.Commands.Application
                         .AddField("Role Hierarchy", target.Hierarchy, true)
                         .AddField(
                             "Account Created",
-                            $"{target.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})"
+                            $"{target.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)}"
                         ).Apply(eb =>
                         {
                             if (target.JoinedAt.HasValue)
