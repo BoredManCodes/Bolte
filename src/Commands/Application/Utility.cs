@@ -238,7 +238,7 @@ namespace Volte.Commands.Application
 
             public override async Task HandleUserCommandAsync(UserCommandContext ctx)
             {
-                await ctx.CreateReplyBuilder(true)
+                await ctx.CreateReplyBuilder(false)
                     .WithEmbeds(ctx.CreateEmbedBuilder()
                         .WithTitle(ctx.TargetedGuildUser.ToString())
                         .AddField("ID", ctx.TargetedGuildUser.Id, true)
@@ -246,7 +246,7 @@ namespace Volte.Commands.Application
                         .AddField("Status", ctx.TargetedGuildUser.Status, true)
                         .AddField("Is Bot", ctx.TargetedGuildUser.IsBot ? "Yes" : "No", true)
                         .AddField("Role Hierarchy", ctx.TargetedGuildUser.Hierarchy, true)
-                        .AddField("Account Created",
+                        .AddField("Account Created at:",
                             $"{ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.LongDateTime)} ({ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})")
                         .AddField("Joined This Guild",
                             $"{(ctx.TargetedGuildUser.JoinedAt.HasValue ? ctx.TargetedGuildUser.JoinedAt.Value.GetDiscordTimestamp(TimestampType.LongDateTime) : DiscordHelper.Zws)} ({ctx.TargetedGuildUser.CreatedAt.GetDiscordTimestamp(TimestampType.Relative)})")
